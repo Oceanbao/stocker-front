@@ -50,7 +50,7 @@ export const data: ChartData<'line', number[], unknown> = {
 };
 
 function transformRaw(data) {
-	data = data.result.data;
+	data = Array.prototype.slice.call(data.result.data, -50);
 	const extracted: { labels: string[]; data: number[] } = {
 		labels: [],
 		data: []

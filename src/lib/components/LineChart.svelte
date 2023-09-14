@@ -26,5 +26,4 @@
 	);
 </script>
 
-<!-- <Line {data} options={{ responsive: true }} /> -->
-<Line data={stock} options={{ responsive: true }} />
+<Line data={stock} options={{ responsive: true, maintainAspectRatio: false }} />

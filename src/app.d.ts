@@ -3,7 +3,12 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		type PocketBase = import('pocketbase').default;
+		type PocketBaseUserModel = import('pocketbase').default['authStore']['model'];
+		interface Locals {
+			pb?: PocketBase;
+			user?: PocketBaseUserModel;
+		}
 		// interface PageData {}
 		// interface Platform {}
 	}
