@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Tabs from '$lib/components/ui/tabs';
@@ -9,9 +11,21 @@
 	import Search from './Search.svelte';
 	import UserNav from './UserNav.svelte';
 	import RecentSales from './RecentSales.svelte';
-	import LineChart from '$lib/components/LineChart.svelte';
+	import { createChart, type IChartApi } from 'lightweight-charts';
+	import { generateCandlestickData, getRaw } from '$lib/genData';
 
 	export let data;
+	let chartElement: HTMLDivElement;
+	let chart: IChartApi;
+
+	onMount(() => {
+		chart = createChart(chartElement);
+		// const data = generateCandlestickData();
+		const data = getRaw();
+		const mainSeries = chart.addCandlestickSeries();
+		mainSeries.setData(data);
+		// chart.timeScale().fitContent();
+	});
 </script>
 
 <main>
@@ -91,9 +105,7 @@
 								<Card.Title>Graph</Card.Title>
 							</Card.Header>
 							<Card.Content class="w-full h-full">
-								<div class="chart-container">
-									<LineChart />
-								</div>
+								<div id="chart-container" bind:this={chartElement} class="h-full w-full" />
 							</Card.Content>
 						</Card.Root>
 						<Card.Root class="col-span-3">
@@ -113,9 +125,4 @@
 </main>
 
 <style>
-	.chart-container {
-		position: relative;
-		width: 100%;
-		height: 90%;
-	}
 </style>

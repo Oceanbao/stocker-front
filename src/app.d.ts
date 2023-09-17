@@ -2,7 +2,10 @@
 // for information about these interfaces
 declare global {
 	namespace App {
-		// interface Error {}
+		interface Error {
+			code: string;
+			id: string;
+		}
 		type PocketBase = import('pocketbase').default;
 		type PocketBaseUserModel = import('pocketbase').default['authStore']['model'];
 		interface Locals {

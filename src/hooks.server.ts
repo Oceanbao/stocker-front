@@ -1,4 +1,4 @@
-import { redirect, type Handle } from '@sveltejs/kit';
+import { redirect, type Handle, type HandleServerError } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
 import { createPB } from '$lib/server/pb';
@@ -39,4 +39,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 	);
 
 	return response;
+};
+
+export const handleError: HandleServerError = ({ error, event }) => {
+	return {
+		message: 'Whoops!',
+		code: error.code ?? 'UNKNOWN',
+		id: '0'
+	};
 };
