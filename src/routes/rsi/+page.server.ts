@@ -1,35 +1,14 @@
 import { json } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-class InMemoryCache {
-	constructor() {
-		this.cache = {};
-	}
-
-	get(key) {
-		return this.cache[key];
-	}
-
-	set(key, value) {
-		this.cache[key] = value;
-	}
-
-	delete(key) {
-		delete this.cache[key];
-	}
-
-	clear() {
-		this.cache = {};
-	}
-}
+import { InMemoryCache } from '$lib/utils';
 
 const cache = new InMemoryCache();
 
 export const load: PageServerLoad = async (event) => {
 	let records = cache.get('records');
 
-	if (records) {
-		console.log('reading cache');
+	if (records && records.length) {
 		return records;
 	}
 
@@ -40,43 +19,3 @@ export const load: PageServerLoad = async (event) => {
 
 	return records;
 };
-
-// class MemoryCache {
-//   constructor() {
-//     this.cache = {};
-//   }
-
-//   get(key) {
-//     return this.cache[key];
-//   }
-
-//   set(key, value) {
-//     this.cache[key] = value;
-//   }
-
-//   delete(key) {
-//     delete this.cache[key];
-//   }
-
-//   clear() {
-//     this.cache = {};
-//   }
-// }
-
-// // Usage
-// const cache = new MemoryCache();
-
-// // Set value
-// cache.set('key1', 'value1');
-
-// // Get value
-// console.log(cache.get('key1')); // Outputs: 'value1'
-
-// // Delete value
-// cache.delete('key1');
-
-// // Check value
-// console.log(cache.get('key1')); // Outputs: undefined
-
-// // Clear cache
-// cache.clear();

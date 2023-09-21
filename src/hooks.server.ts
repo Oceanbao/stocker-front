@@ -3,7 +3,7 @@ import { env } from '$env/dynamic/private';
 
 import { createPB } from '$lib/server/pb';
 
-const PROTECTED_ROUTES: string[] = ['/dashboard'];
+const PROTECTED_ROUTES: string[] = ['/dashboard', '/rsi'];
 
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pb = createPB();
