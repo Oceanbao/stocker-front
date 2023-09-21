@@ -10,7 +10,6 @@
 	import DashboardMainNav from './MainNav.svelte';
 	import Search from './Search.svelte';
 	import UserNav from './UserNav.svelte';
-	import RecentSales from './RecentSales.svelte';
 	import { createChart, type IChartApi } from 'lightweight-charts';
 	import { generateCandlestickData, getRaw } from '$lib/genData';
 
@@ -114,7 +113,7 @@
 								<Card.Description>You made 265 sales this month.</Card.Description>
 							</Card.Header>
 							<Card.Content>
-								<RecentSales />
+								<p>CONTENT</p>
 							</Card.Content>
 						</Card.Root>
 					</div>
