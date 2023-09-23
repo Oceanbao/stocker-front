@@ -15,13 +15,14 @@ import type { RequestHandler } from '@sveltejs/kit';
 // }
 
 export const GET: RequestHandler = async (event) => {
-	const records = await event.locals.pb?.collection('alert').getFullList({
-		filter: 'rsi <= 30'
+	const records = await event.locals.pb?.collection('alert').getList(1, 50, {
+		filter: 'rsi <= 30',
+		sort: '-cap'
 	});
 
 	return new Response(
 		JSON.stringify({
-			records
+			records: records?.items
 		})
 	);
 };

@@ -38,6 +38,7 @@
 			}
 			setLegendText(data.value);
 		});
+		chart.resize(chartElement.offsetWidth, chartElement.offsetHeight);
 		// chart.timeScale().fitContent();
 	});
 
