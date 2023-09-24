@@ -17,10 +17,12 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"prepare": "husky install"
 	},
-  "lint-staged": {
-    "*": "pnpm lint",
-    "*": "pnpm format"
-  },
+	"lint-staged": {
+		"**/*.{svelte,ts,json}": [
+			"pnpm lint",
+			"pnpm format"
+		]
+	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
