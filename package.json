@@ -17,6 +17,10 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"prepare": "husky install"
 	},
+  "lint-staged": {
+    "*": "pnpm lint",
+    "*": "pnpm format"
+  },
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
@@ -27,6 +31,7 @@
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
 		"husky": "^8.0.3",
+		"lint-staged": "^14.0.1",
 		"postcss": "^8.4.24",
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^2.8.0",
