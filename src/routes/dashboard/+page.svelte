@@ -7,7 +7,7 @@
 	import DashboardMainNav from './MainNav.svelte';
 	import Search from './Search.svelte';
 	import UserNav from './UserNav.svelte';
-	import Rsi from './RSI.svelte';
+	import Rsi from './Rsi.svelte';
 
 	export let data;
 
