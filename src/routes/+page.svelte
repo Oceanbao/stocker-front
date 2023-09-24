@@ -7,8 +7,8 @@
 
 <main class="h-full grid place-items-center">
 	<Card.Root class="w-80">
-		<Card.Header class="space-y-1">
-			<Card.Title class="text-2xl">Home</Card.Title>
+		<Card.Header class="space-y-1 text-center">
+			<Card.Title class="text-2xl">Stocker</Card.Title>
 			<Card.Description>Welcome to the Stocker App.</Card.Description>
 		</Card.Header>
 		<Card.Content class="grid gap-4">
@@ -20,8 +20,14 @@
 		</Card.Content>
 		<Card.Footer class="flex justify-center">
 			{#if data.user}
-				<p>You're logged in as {data.user.name}</p>
-				<a href="/dashboard">Dashboard</a>
+				<div class="flex flex-col">
+					<p>You're logged in as: {data.user.name}</p>
+					<Button class="text-center my-4"
+						><a href="/dashboard" class="text-sm font-medium transition-colors hover:text-primary">
+							Dashboard
+						</a></Button
+					>
+				</div>
 			{:else}
 				<a href="/login">
 					<Button type="button" class="w-full">Login</Button>

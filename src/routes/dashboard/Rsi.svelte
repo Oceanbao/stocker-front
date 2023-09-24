@@ -1,12 +1,11 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import { Button } from '$lib/components/ui/button';
 	import ChartRsi from '$lib/components/ChartRSI.svelte';
 	import { Shell } from 'lucide-svelte';
 
-	export let data;
-
-	let { records } = data;
+	export let records;
 
 	records = records.map((x) => ({ code: x.code, rsi: x.rsi, name: x.name, cap: x.cap }));
 	records.sort((a, b) => (a.cap > b.cap ? -1 : b.cap > a.cap ? 1 : 0));
@@ -114,7 +113,7 @@
 
 <!-- <Dialog.Root open={dialogOpen} closeOnOutsideClick={false} closeOnEscape={false} onOpenChange={(open) => { if(open === false) { selectedAccount = undefined; dialogOpen = false } else if(open === true) { dialogOpen = true } } }>  -->
 <Dialog.Root open={dialogOpened} onOpenChange={(open) => openDialog(open, { code: '', name: '' })}>
-	<Dialog.Content class="w-full h-[80%] max-w-[80%]">
+	<Dialog.Content class="h-[90vh] w-[95vw] lg:h-[80%] lg:max-w-[80%]">
 		<Dialog.Header>
 			<Dialog.Title>{codeName}</Dialog.Title>
 			<Dialog.Description>Time series for company selected.</Dialog.Description>
@@ -142,26 +141,35 @@
 	</Dialog.Content>
 </Dialog.Root>
 
-<main class="grid place-items-center lg:max-w-3xl lg:mx-auto">
+<div class="grid place-items-center lg:max-w-3xl lg:mx-auto">
 	<p>Total: {records.length}</p>
 	<Table.Root>
 		<Table.Caption>Today's Lead Stocks</Table.Caption>
 		<Table.Header>
 			<Table.Row>
-				<Table.Head class="w-[100px]">CodeName</Table.Head>
-				<Table.Head class="text-right">Cap</Table.Head>
-				<Table.Head class="text-right">RSI</Table.Head>
+				<Table.Head class="text-center">CodeName</Table.Head>
+				<Table.Head class="text-center">Cap</Table.Head>
+				<Table.Head class="text-center">RSI</Table.Head>
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
 			{#each records as record, i (i)}
 				<Table.Row>
-					<button
-						class="cursor-pointer"
-						on:click={() => openDialog(true, { code: record.code, name: record.name })}
-					>
-						<Table.Cell class="font-medium">{record.code} {record.name}</Table.Cell>
-					</button>
+					<!-- <Button -->
+					<!-- 	variant="secondary" -->
+					<!-- 	on:click={() => openDialog(true, { code: record.code, name: record.name })} -->
+					<!-- > -->
+					<!-- 	<Table.Cell class="font-medium">{record.code} {record.name}</Table.Cell> -->
+					<!-- </Button> -->
+					<Table.Cell class="font-medium">
+						<Button
+							variant="secondary"
+							class="w-[100px]"
+							on:click={() => openDialog(true, { code: record.code, name: record.name })}
+						>
+							{record.name}
+						</Button>
+					</Table.Cell>
 					<Table.Cell class="text-right"
 						>{(parseFloat(record.cap) / 1_000_000_000.0).toFixed(4)}</Table.Cell
 					>
@@ -170,4 +178,4 @@
 			{/each}
 		</Table.Body>
 	</Table.Root>
-</main>
+</div>

@@ -1,30 +1,17 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
-	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Tabs from '$lib/components/ui/tabs';
 
-	import { Activity, CreditCard, DollarSign, Download, Users } from 'lucide-svelte';
+	import { Activity, CreditCard, DollarSign, Users } from 'lucide-svelte';
 
 	import DashboardMainNav from './MainNav.svelte';
 	import Search from './Search.svelte';
 	import UserNav from './UserNav.svelte';
-	import { createChart, type IChartApi } from 'lightweight-charts';
-	import { generateCandlestickData, getRaw } from '$lib/genData';
+	import Rsi from './RSI.svelte';
 
 	export let data;
-	let chartElement: HTMLDivElement;
-	let chart: IChartApi;
 
-	onMount(() => {
-		chart = createChart(chartElement);
-		// const data = generateCandlestickData();
-		const data = getRaw();
-		const mainSeries = chart.addCandlestickSeries();
-		mainSeries.setData(data);
-		// chart.timeScale().fitContent();
-	});
+	let { records } = data;
 </script>
 
 <main>
@@ -41,17 +28,11 @@
 		<div class="flex-1 space-y-4 p-8 pt-6">
 			<div class="flex items-center justify-between space-y-2">
 				<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
-				<div class="flex items-center space-x-2">
-					<Button size="sm">
-						<Download class="mr-2 h-4 w-4" />
-						Download
-					</Button>
-				</div>
 			</div>
 			<Tabs.Root value="overview" class="space-y-4">
-				<Tabs.List>
+				<Tabs.List class="overflow-x-auto w-full justify-start">
 					<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-					<Tabs.Trigger value="analytics" disabled>Analytics</Tabs.Trigger>
+					<Tabs.Trigger value="rsi">RSI</Tabs.Trigger>
 					<Tabs.Trigger value="reports" disabled>Reports</Tabs.Trigger>
 					<Tabs.Trigger value="notifications" disabled>Notifications</Tabs.Trigger>
 				</Tabs.List>
@@ -99,15 +80,16 @@
 						</Card.Root>
 					</div>
 					<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-						<Card.Root class="col-span-4">
+						<Card.Root class="lg:col-span-4">
 							<Card.Header>
 								<Card.Title>Graph</Card.Title>
+								<Card.Description>Some business graph.</Card.Description>
 							</Card.Header>
 							<Card.Content class="w-full h-full">
-								<div id="chart-container" bind:this={chartElement} class="h-full w-full" />
+								<p>CONTENT</p>
 							</Card.Content>
 						</Card.Root>
-						<Card.Root class="col-span-3">
+						<Card.Root class="lg:col-span-3">
 							<Card.Header>
 								<Card.Title>Recent Sales</Card.Title>
 								<Card.Description>You made 265 sales this month.</Card.Description>
@@ -117,6 +99,9 @@
 							</Card.Content>
 						</Card.Root>
 					</div>
+				</Tabs.Content>
+				<Tabs.Content value="rsi" class="space-y-4">
+					<Rsi {records} />
 				</Tabs.Content>
 			</Tabs.Root>
 		</div>

@@ -3,8 +3,8 @@
 declare global {
 	namespace App {
 		interface Error {
-			code: string;
-			id: string;
+			message: string;
+			id: number;
 		}
 		type PocketBase = import('pocketbase').default;
 		type PocketBaseUserModel = import('pocketbase').default['authStore']['model'];

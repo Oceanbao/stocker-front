@@ -15,8 +15,8 @@
 		loading = true;
 
 		return async ({ update }) => {
-			loading = false;
 			await update();
+			loading = false;
 		};
 	};
 </script>
@@ -26,7 +26,7 @@
 		<form method="POST" action="?/login" use:enhance={submitFunction}>
 			<Card.Header class="space-y-1">
 				<Card.Title class="text-2xl">Login</Card.Title>
-				<Card.Description>Enter your email below to create your account</Card.Description>
+				<Card.Description>Enter your credentials below to login your account.</Card.Description>
 			</Card.Header>
 			<Card.Content class="grid gap-4">
 				<div class="relative">

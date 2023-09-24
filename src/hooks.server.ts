@@ -3,7 +3,7 @@ import { env } from '$env/dynamic/private';
 
 import { createPB } from '$lib/server/pb';
 
-const PROTECTED_ROUTES: string[] = ['/dashboard', '/rsi'];
+const PROTECTED_ROUTES: string[] = ['/dashboard'];
 
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pb = createPB();
@@ -41,10 +41,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	return response;
 };
 
-export const handleError: HandleServerError = ({ error, event }) => {
+export const handleError = (({ error, event }) => {
 	return {
-		message: 'Whoops!',
-		code: error.code ?? 'UNKNOWN',
-		id: '0'
+		message: `Server Error: ${error} `,
+		id: -1
 	};
-};
+}) satisfies HandleServerError;

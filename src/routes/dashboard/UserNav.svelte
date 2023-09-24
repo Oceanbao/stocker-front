@@ -16,7 +16,7 @@
 			</Avatar.Root>
 		</Button>
 	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="w-56">
+	<DropdownMenu.Content class="w-48">
 		<DropdownMenu.Label class="font-normal">
 			<div class="flex flex-col space-y-1">
 				<p class="text-sm font-medium leading-none">{username}</p>
@@ -24,22 +24,22 @@
 			</div>
 		</DropdownMenu.Label>
 		<DropdownMenu.Separator />
-		<DropdownMenu.Group>
-			<DropdownMenu.Item>
-				Profile
-				<DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				Billing
-				<DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				Settings
-				<DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>New Team</DropdownMenu.Item>
-		</DropdownMenu.Group>
-		<DropdownMenu.Separator />
+		<!-- <DropdownMenu.Group> -->
+		<!-- 	<DropdownMenu.Item> -->
+		<!-- 		Profile -->
+		<!-- 		<DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut> -->
+		<!-- 	</DropdownMenu.Item> -->
+		<!-- 	<DropdownMenu.Item> -->
+		<!-- 		Billing -->
+		<!-- 		<DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut> -->
+		<!-- 	</DropdownMenu.Item> -->
+		<!-- 	<DropdownMenu.Item> -->
+		<!-- 		Settings -->
+		<!-- 		<DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut> -->
+		<!-- 	</DropdownMenu.Item> -->
+		<!-- 	<DropdownMenu.Item>New Team</DropdownMenu.Item> -->
+		<!-- </DropdownMenu.Group> -->
+		<!-- <DropdownMenu.Separator /> -->
 		<a href="/logout">
 			<DropdownMenu.Item>
 				Log out

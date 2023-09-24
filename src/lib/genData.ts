@@ -1,5 +1,3 @@
-import rawData from '$lib/raw.json';
-
 export function generateCandlestickData() {
 	return [
 		{
@@ -1048,8 +1046,8 @@ export function generateCandlestickData() {
 	];
 }
 
-export function getRaw() {
-	const out = rawData.result.data.map((x) => {
+export function getRaw(raw) {
+	const out = raw.result.data.map((x) => {
 		return {
 			time: x.day,
 			open: parseFloat(x.open),
