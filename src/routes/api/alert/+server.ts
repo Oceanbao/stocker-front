@@ -20,9 +20,18 @@ export const GET: RequestHandler = async (event) => {
 		sort: '-cap'
 	});
 
+	let status: string;
+
+	if (records) {
+		status = 'ok';
+	} else {
+		status = 'bad';
+	}
+
 	return new Response(
 		JSON.stringify({
-			records: records?.items
+			status,
+			data: records?.items
 		})
 	);
 };

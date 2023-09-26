@@ -5,6 +5,7 @@ export const GET: RequestHandler = async (event) => {
 	if (!code) {
 		return new Response(
 			JSON.stringify({
+				status: 'bad',
 				message: 'require code'
 			})
 		);
@@ -21,8 +22,9 @@ export const GET: RequestHandler = async (event) => {
 
 	return new Response(
 		JSON.stringify({
-			message: 'ok',
-			records
+			status: 'bad',
+			message: 'success',
+			data: records
 		})
 	);
 };

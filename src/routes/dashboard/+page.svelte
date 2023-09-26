@@ -1,18 +1,53 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
+	import { cn } from '$lib/utils';
 	import * as Card from '$lib/components/ui/card';
 	import * as Tabs from '$lib/components/ui/tabs';
-
-	import { Activity, CreditCard, DollarSign, Users } from 'lucide-svelte';
+	import { Button } from '$lib/components/ui/button';
+	import { Badge } from '$lib/components/ui/badge';
 
 	import DashboardMainNav from './MainNav.svelte';
 	import Search from './Search.svelte';
 	import UserNav from './UserNav.svelte';
 	import Rsi from './Rsi.svelte';
+	import ModalChart from './ModalChart.svelte';
+	import { sTrackData, sModalData } from './store';
+	import SkeletonA from '$lib/components/SkeletonA.svelte';
 
 	export let data;
 
-	let { records } = data;
+	let dataReady = false;
+	let numTrackedData = 0;
+
+	onMount(async () => {
+		console.log('OnMount: processing server sent promise.');
+		const result = await data.records?.track;
+		for (const d of result) {
+			$sTrackData.push({ tracked: true, ...d });
+			numTrackedData += 1;
+		}
+		dataReady = true;
+	});
+
+	function openDialog(code: string, name: string) {
+		$sModalData.code = code;
+		$sModalData.name = name;
+		$sModalData.open = true;
+		$sModalData.trackable = false;
+	}
+
+	function untrack(code: string) {
+		const found = $sTrackData.findIndex((x) => x.code === code);
+		if (found !== -1) {
+			$sTrackData[found].tracked = false;
+			numTrackedData -= 1;
+		}
+		console.log($sTrackData);
+	}
 </script>
+
+<ModalChart />
 
 <main>
 	<div class="flex-col md:flex">
@@ -29,79 +64,92 @@
 			<div class="flex items-center justify-between space-y-2">
 				<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
 			</div>
-			<Tabs.Root value="overview" class="space-y-4">
+			<Tabs.Root value="tracking" class="space-y-4">
 				<Tabs.List class="overflow-x-auto w-full justify-start">
-					<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+					<Tabs.Trigger value="tracking">Tracking</Tabs.Trigger>
 					<Tabs.Trigger value="rsi">RSI</Tabs.Trigger>
 					<Tabs.Trigger value="reports" disabled>Reports</Tabs.Trigger>
 					<Tabs.Trigger value="notifications" disabled>Notifications</Tabs.Trigger>
 				</Tabs.List>
-				<Tabs.Content value="overview" class="space-y-4">
+				<Tabs.Content value="tracking" class="space-y-4">
+					<div />
 					<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-						<Card.Root>
-							<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-								<Card.Title class="text-sm font-medium">Total Revenue</Card.Title>
-								<DollarSign class="h-4 w-4 text-muted-foreground" />
-							</Card.Header>
-							<Card.Content>
-								<div class="text-2xl font-bold">$45,231.89</div>
-								<p class="text-xs text-muted-foreground">+20.1% from last month</p>
-							</Card.Content>
-						</Card.Root>
-						<Card.Root>
-							<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-								<Card.Title class="text-sm font-medium">Subscriptions</Card.Title>
-								<Users class="h-4 w-4 text-muted-foreground" />
-							</Card.Header>
-							<Card.Content>
-								<div class="text-2xl font-bold">+2350</div>
-								<p class="text-xs text-muted-foreground">+180.1% from last month</p>
-							</Card.Content>
-						</Card.Root>
-						<Card.Root>
-							<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-								<Card.Title class="text-sm font-medium">Sales</Card.Title>
-								<CreditCard class="h-4 w-4 text-muted-foreground" />
-							</Card.Header>
-							<Card.Content>
-								<div class="text-2xl font-bold">+12,234</div>
-								<p class="text-xs text-muted-foreground">+19% from last month</p>
-							</Card.Content>
-						</Card.Root>
-						<Card.Root>
-							<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-								<Card.Title class="text-sm font-medium">Active Now</Card.Title>
-								<Activity class="h-4 w-4 text-muted-foreground" />
-							</Card.Header>
-							<Card.Content>
-								<div class="text-2xl font-bold">+573</div>
-								<p class="text-xs text-muted-foreground">+201 since last hour</p>
-							</Card.Content>
-						</Card.Root>
+						{#if dataReady}
+							{#if !numTrackedData}
+								<Card.Root>
+									<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+										<Card.Title class="text-lg font-medium">No tracked stock available.</Card.Title>
+									</Card.Header>
+									<Card.Content>
+										<p class="text-xs text-muted-foreground text-left">
+											Track stock by toggle on chart.
+										</p>
+									</Card.Content>
+								</Card.Root>
+							{/if}
+							{#each $sTrackData as d, index (d.code)}
+								{#if d.tracked}
+									<Card.Root>
+										<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+											<Card.Title class="text-lg font-medium">
+												<Button variant="secondary" on:click={() => openDialog(d.code, d.name)}>
+													{d.code}
+													{d.name}
+												</Button>
+											</Card.Title>
+											<Button class="h-6 bg-blue-400" on:click={() => untrack(d.code)}
+												>Untrack</Button
+											>
+										</Card.Header>
+										<Card.Content class="flex flex-col items-end gap-2">
+											<Badge
+												variant="outline"
+												class={cn(
+													'text-2xl',
+													'font-semibold',
+													d.change > 0 ? 'bg-green-700' : 'bg-red-700'
+												)}
+											>
+												{(d.change * 100).toFixed(3)}%
+											</Badge>
+											<p class="text-sm text-muted-foreground">{d.days} days</p>
+										</Card.Content>
+									</Card.Root>
+								{/if}
+							{/each}
+						{:else}
+							<SkeletonA num={3} />
+						{/if}
 					</div>
-					<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-						<Card.Root class="lg:col-span-4">
-							<Card.Header>
-								<Card.Title>Graph</Card.Title>
-								<Card.Description>Some business graph.</Card.Description>
-							</Card.Header>
-							<Card.Content class="w-full h-full">
-								<p>CONTENT</p>
-							</Card.Content>
-						</Card.Root>
-						<Card.Root class="lg:col-span-3">
-							<Card.Header>
-								<Card.Title>Recent Sales</Card.Title>
-								<Card.Description>You made 265 sales this month.</Card.Description>
-							</Card.Header>
-							<Card.Content>
-								<p>CONTENT</p>
-							</Card.Content>
-						</Card.Root>
-					</div>
+					<!-- <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7"> -->
+					<!-- 	<Card.Root class="lg:col-span-4"> -->
+					<!-- 		<Card.Header> -->
+					<!-- 			<Card.Title>Graph</Card.Title> -->
+					<!-- 			<Card.Description>Some business graph.</Card.Description> -->
+					<!-- 		</Card.Header> -->
+					<!-- 		<Card.Content class="w-full h-full"> -->
+					<!-- 			<p>CONTENT</p> -->
+					<!-- 		</Card.Content> -->
+					<!-- 	</Card.Root> -->
+					<!-- 	<Card.Root class="lg:col-span-3"> -->
+					<!-- 		<Card.Header> -->
+					<!-- 			<Card.Title>Recent Sales</Card.Title> -->
+					<!-- 			<Card.Description>You made 265 sales this month.</Card.Description> -->
+					<!-- 		</Card.Header> -->
+					<!-- 		<Card.Content> -->
+					<!-- 			<p>CONTENT</p> -->
+					<!-- 		</Card.Content> -->
+					<!-- 	</Card.Root> -->
+					<!-- </div> -->
 				</Tabs.Content>
 				<Tabs.Content value="rsi" class="space-y-4">
-					<Rsi {records} />
+					{#await data.records?.alert}
+						<div class="grid">
+							<SkeletonA num={3} />
+						</div>
+					{:then value}
+						<Rsi records={value} />
+					{/await}
 				</Tabs.Content>
 			</Tabs.Root>
 		</div>

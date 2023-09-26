@@ -5,7 +5,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { Shell } from 'lucide-svelte';
+	import SkeletonA from '$lib/components/SkeletonA.svelte';
 
 	export let form;
 
@@ -54,7 +54,7 @@
 			<Card.Footer>
 				<Button type="submit" class="w-full">
 					{#if loading}
-						<Shell class="animate-spin" style="animation-direction: reverse" />
+						<SkeletonA />
 					{:else}
 						Login
 					{/if}
