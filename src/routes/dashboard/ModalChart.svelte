@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import ChartRsi from '$lib/components/ChartRSI.svelte';
@@ -11,6 +11,9 @@
 	let candleData;
 	let rsiData;
 	let loadingRequest = true;
+	let loadingTrackAction = false;
+	let actionResult: string;
+	let thisStockTracked: boolean | undefined;
 
 	function RSI(data: { time: string; closing: number }[], period: number) {
 		const closing = data.map((x) => x.closing);
@@ -57,7 +60,7 @@
 
 	async function openDialog() {
 		loadingRequest = true;
-		thisStockTracked = $sTrackData.find((x) => x.code === $sModalData.code)?.tracked;
+		thisStockTracked = $sTrackData.some((x) => x.code === $sModalData.code);
 
 		let dataStored = dailyCache.get($sModalData.code);
 		if (!dataStored) {
@@ -103,25 +106,24 @@
 		openDialog();
 	}
 
-	let loadingTrackAction = false;
-	let actionResult: string;
-	let thisStockTracked: boolean | undefined;
-
 	const submitTrackAction: SubmitFunction = (event) => {
 		loadingTrackAction = true;
 
 		event.formData.set('code', $sModalData.code);
 		event.formData.set('name', $sModalData.name);
-		event.formData.set('track', 'y');
 
-		// TODO: refresh the stale data and store of sTrackData for Track Tab
-		return async ({ result, update }) => {
-			await update();
+		return async ({ result }) => {
+			// await update();
 			switch (result.type) {
 				case 'success':
 					console.log(result.data);
-					actionResult = result.data?.message;
 					thisStockTracked = true;
+					if (result.data) {
+						$sTrackData = [...$sTrackData, result.data.data];
+					} else {
+						actionResult = 'Unexpected missing data but action successful.';
+					}
+					await applyAction(result);
 					break;
 				case 'failure':
 					console.log(result.data);
@@ -160,10 +162,10 @@
 						{:else}
 							Track
 						{/if}
-						{#if actionResult}
-							<p class="text-red-900">{actionResult}</p>
-						{/if}
 					</Button>
+					{#if actionResult}
+						<span class="text-red-500">{actionResult}</span>
+					{/if}
 				</form>
 			{/if}
 		</Dialog.Header>
