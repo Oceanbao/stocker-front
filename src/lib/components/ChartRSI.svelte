@@ -51,7 +51,7 @@
 	}
 </script>
 
-<div id="chart-container" bind:this={chartElement} class="h-full w-full">
+<div id="chart-container" bind:this={chartElement} class="h-[50vh] w-full">
 	<div
 		class="rsi-legend block left-1 top-1 border-slate-800 border rounded w-20 text-center"
 		bind:this={legendElement}

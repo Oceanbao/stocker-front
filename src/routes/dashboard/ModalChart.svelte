@@ -6,6 +6,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Loader2 } from 'lucide-svelte';
 	import { sModalData, sTrackData } from './store';
+	import Kdj from './Kdj.svelte';
 
 	let dailyCache: Map<string, Record<string, string>[]> = new Map();
 	let candleData;
@@ -143,7 +144,9 @@
 </script>
 
 <Dialog.Root open={$sModalData.open} onOpenChange={() => ($sModalData.open = false)}>
-	<Dialog.Content class="h-[70vh] w-[95vw] lg:h-[80%] lg:max-w-[80%] auto-rows-auto">
+	<Dialog.Content
+		class="h-[70vh] w-[95vw] lg:h-[80%] lg:max-w-[80%] auto-rows-auto overflow-y-auto"
+	>
 		<Dialog.Header>
 			<Dialog.Title>{$sModalData.code} {$sModalData.name}</Dialog.Title>
 			<Dialog.Description>Latest close price with RSI indicator.</Dialog.Description>
@@ -174,6 +177,7 @@
 				<Loader2 class="animate-spin w-32 h-32" style="animation-direction: reverse" />
 			{:else}
 				<ChartRsi {candleData} {rsiData} />
+				<Kdj {candleData} />
 			{/if}
 		</div>
 		<!-- <div class="grid gap-4 py-4"> -->
