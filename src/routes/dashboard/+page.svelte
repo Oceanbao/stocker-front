@@ -3,7 +3,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import type { SubmitFunction } from './$types.js';
 
-	import { cn } from '$lib/utils';
+	import { cn, diffDay } from '$lib/utils';
 	import * as Card from '$lib/components/ui/card';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Button } from '$lib/components/ui/button';
@@ -25,6 +25,52 @@
 	let loadingTrackActionIndex: number;
 	let actionResult = '';
 
+	const DemoTrackResult = {
+		code: '1.603589',
+		name: '口子窖',
+		started: '2023-08-28 00:00:00.000Z',
+		Records: [
+			{
+				code: '1.603589',
+				date: '2023-08-28 00:00:00.000Z',
+				open: 1,
+				high: 1,
+				low: 1,
+				close: 1
+			}
+		]
+	};
+	type TTrackResult = typeof DemoTrackResult;
+
+	function processTrackAPIResult(data: TTrackResult[]) {
+		const result = [];
+		data.forEach((x) => {
+			if (!x.Records.length) {
+				result.push({
+					code: x.code,
+					name: x.name,
+					days: 0,
+					change: 0
+				});
+				return;
+			}
+
+			const startDate = new Date(x.Records[0].date);
+			const endDate = new Date(x.Records[x.Records.length - 1].date);
+			const diffDays = diffDay(startDate, endDate);
+			const startClose = x.Records[0].close;
+			const endClose = x.Records[x.Records.length - 1].close;
+			const change = (endClose - startClose) / startClose;
+			result.push({
+				code: x.code,
+				name: x.name,
+				days: diffDays,
+				change
+			});
+		});
+		return result;
+	}
+
 	onMount(async () => {
 		console.log('OnMount: processing server sent promise.');
 		// NOTE: onMount and the entire component is rerun when navigation happens
@@ -35,7 +81,9 @@
 		}
 
 		const result = await data.records?.track;
-		for (const d of result) {
+		const trackData = processTrackAPIResult(result);
+
+		for (const d of trackData) {
 			$sTrackData = [...$sTrackData, d];
 		}
 		dataReady = true;

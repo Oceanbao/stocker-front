@@ -2,62 +2,29 @@
 	import { applyAction, enhance } from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import ChartRsi from '$lib/components/ChartRSI.svelte';
 	import { Button } from '$lib/components/ui/button';
+	import ChartStock from '$lib/components/ChartStock.svelte';
 	import { Loader2 } from 'lucide-svelte';
 	import { sModalData, sTrackData } from './store';
-	import Kdj from './Kdj.svelte';
+	import {
+		computeKDJ,
+		computeMACD,
+		computeRSI,
+		type TDaily,
+		type TKdj,
+		type TMacd,
+		type TRsi
+	} from './chartUtils';
 
 	let dailyCache: Map<string, Record<string, string>[]> = new Map();
-	let candleData;
-	let rsiData;
+	let candleData: TDaily[];
+	let rsiData: TRsi[];
+	let kdjData: TKdj[];
+	let macdData: TMacd[];
 	let loadingRequest = true;
 	let loadingTrackAction = false;
 	let actionResult: string;
 	let thisStockTracked: boolean | undefined;
-
-	function RSI(data: { time: string; closing: number }[], period: number) {
-		const closing = data.map((x) => x.closing);
-		const pastAvgPeriod = period - 1;
-		const rsi: number[] = [];
-		const gains: number[] = [];
-		const losses: number[] = [];
-		let rsGain = 0;
-		let rsLoss = 0;
-
-		for (let idx = 0; idx <= closing.length; idx++) {
-			if (idx === 0) {
-				gains.push(0);
-				losses.push(0);
-				rsGain = 0;
-				rsLoss = 0;
-				continue;
-			}
-			const diff = closing[idx] - closing[idx - 1];
-			if (diff > 0) {
-				gains[idx] = diff;
-				losses[idx] = 0;
-			} else {
-				gains[idx] = 0;
-				losses[idx] = -diff;
-			}
-			rsGain = (rsGain * pastAvgPeriod + gains[idx]) / period;
-			rsLoss = (rsLoss * pastAvgPeriod + losses[idx]) / period;
-			if (rsGain === 0 || rsLoss === 0) {
-				rsi[idx] = 0;
-				continue;
-			}
-			const rs = rsGain / rsLoss;
-			rsi[idx] = (rs / (1 + rs)) * 100;
-		}
-
-		const result = data.map((x, idx) => ({
-			time: x.time,
-			value: rsi[idx]
-		}));
-
-		return result;
-	}
 
 	async function openDialog() {
 		loadingRequest = true;
@@ -76,15 +43,17 @@
 
 		candleData = dataStored?.map((x) => ({
 			time: x.date.slice(0, 10),
-			open: x.open,
-			high: x.high,
-			low: x.low,
-			close: x.close
+			open: parseFloat(x.open),
+			high: parseFloat(x.high),
+			low: parseFloat(x.low),
+			close: parseFloat(x.close)
 		}));
-		rsiData = RSI(
-			candleData.map((x) => ({ time: x.time, closing: parseFloat(x.close) })),
+		rsiData = computeRSI(
+			candleData.map((x) => ({ time: x.time, closing: x.close })),
 			6
 		);
+		kdjData = computeKDJ(candleData);
+		macdData = computeMACD(candleData);
 		loadingRequest = false;
 	}
 
@@ -176,8 +145,26 @@
 			{#if loadingRequest}
 				<Loader2 class="animate-spin w-32 h-32" style="animation-direction: reverse" />
 			{:else}
-				<ChartRsi {candleData} {rsiData} />
-				<Kdj {candleData} />
+				<ChartStock
+					{candleData}
+					lineRsiData={rsiData}
+					lineDataK={kdjData.map((x) => ({ time: x.time, value: x.k }))}
+					lineDataD={kdjData.map((x) => ({ time: x.time, value: x.d }))}
+					lineDataJ={kdjData.map((x) => ({ time: x.time, value: x.j }))}
+					lineDataMacdHist={macdData.map((x) => ({
+						time: x.time,
+						color: x.hist > 0 ? 'green' : 'red',
+						value: x.hist
+					}))}
+					lineDataMacdDiff={macdData.map((x) => ({
+						time: x.time,
+						value: x.diff
+					}))}
+					lineDataMacdDea={macdData.map((x) => ({
+						time: x.time,
+						value: x.dea
+					}))}
+				/>
 			{/if}
 		</div>
 		<!-- <div class="grid gap-4 py-4"> -->

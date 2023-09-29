@@ -12,7 +12,7 @@ export const GET: RequestHandler = async (event) => {
 	}
 
 	const today = new Date();
-	const xDayAgo = 120;
+	const xDayAgo = 240;
 	const thatDate = new Date(today - 1000 * 60 * 60 * 24 * xDayAgo);
 	const thatDateFormatted = thatDate.toJSON().slice(0, 10);
 

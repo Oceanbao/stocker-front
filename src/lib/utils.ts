@@ -55,24 +55,8 @@ export const flyAndScale = (
 	};
 };
 
-export class InMemoryCache {
-	constructor() {
-		this.cache = {};
-	}
-
-	get(key) {
-		return this.cache[key];
-	}
-
-	set(key, value) {
-		this.cache[key] = value;
-	}
-
-	delete(key) {
-		delete this.cache[key];
-	}
-
-	clear() {
-		this.cache = {};
-	}
+export function diffDay(date1: Date, date2: Date) {
+	const diffTime = Math.abs(date2.getTime() - date1.getTime());
+	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	return diffDays;
 }

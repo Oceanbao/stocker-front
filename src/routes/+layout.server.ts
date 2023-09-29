@@ -14,12 +14,16 @@ export const load: LayoutServerLoad = async (event) => {
 	};
 
 	const getTrackRecords = async () => {
-		const resp = await event.fetch('/api/track');
-		const body = await resp.json();
-		if (body.status === 'ok') {
-			return body.data;
-		} else {
-			return null;
+		try {
+			const body = await event.locals.pb?.send('/track', {});
+			if (body.message === 'ok') {
+				return body.data;
+			} else {
+				return null;
+			}
+		} catch (err) {
+			console.log(err);
+			return err;
 		}
 	};
 
