@@ -117,13 +117,15 @@
 		class="h-[70vh] w-[95vw] lg:h-[80%] lg:max-w-[80%] auto-rows-auto overflow-y-auto"
 	>
 		<Dialog.Header>
-			<Dialog.Title>{$sModalData.code} {$sModalData.name}</Dialog.Title>
-			<Dialog.Description>Latest close price with RSI indicator.</Dialog.Description>
+			<Dialog.Title class="text-sm sm:text-xl">{$sModalData.code} {$sModalData.name}</Dialog.Title>
+			<Dialog.Description class="text-xs sm:text-lg"
+				>Latest close price with RSI indicator.</Dialog.Description
+			>
 			{#if $sModalData.trackable}
 				<form method="POST" action="?/track" use:enhance={submitTrackAction} class="flex flex-col">
 					<Button
 						variant="ghost"
-						class="bg-blue-600 text-white self-center sm:self-end mt-4"
+						class="bg-blue-600 text-white self-center h-6 w-20 sm:w-20 sm:h-8 sm:self-end md:mt-4"
 						disabled={thisStockTracked}
 					>
 						{#if loadingTrackAction}

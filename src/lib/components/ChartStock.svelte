@@ -28,7 +28,7 @@
 	onMount(() => {
 		const chartOptions: ChartOptions = {
 			layout: {
-				textColor: 'black',
+				textColor: 'white',
 				background: { type: ColorType.Solid, color: 'dark' },
 				fontSize: 11,
 				fontFamily: 'Roboto'
@@ -42,16 +42,16 @@
 				}
 			},
 			rightPriceScale: {
-				visible: true
-			},
-			leftPriceScale: {
-				visible: true
+				visible: false
 			}
+			// leftPriceScale: {
+			// 	visible: true
+			// }
 		};
 		chart = createChart(chartElement, chartOptions);
 
 		const candleSeries = chart.addCandlestickSeries({
-			priceScaleId: 'right'
+			priceScaleId: '0'
 		});
 		candleSeries.priceScale().applyOptions({
 			scaleMargins: {
@@ -64,7 +64,7 @@
 		const lineRsi = chart.addLineSeries({
 			lastValueVisible: false,
 			priceLineVisible: false,
-			priceScaleId: 'left',
+			priceScaleId: '1',
 			color: 'rgb(126, 87, 194)',
 			lineWidth: 2
 		});
@@ -79,7 +79,7 @@
 		const lineK = chart.addLineSeries({
 			lastValueVisible: false,
 			priceLineVisible: false,
-			priceScaleId: '1',
+			priceScaleId: '2',
 			color: 'rgb(255,0,0)',
 			lineWidth: 2
 		});
@@ -94,7 +94,7 @@
 		const lineD = chart.addLineSeries({
 			lastValueVisible: false,
 			priceLineVisible: false,
-			priceScaleId: '1',
+			priceScaleId: '2',
 			color: 'rgb(50,205,50)',
 			lineWidth: 2
 		});
@@ -109,7 +109,7 @@
 		const lineJ = chart.addLineSeries({
 			lastValueVisible: false,
 			priceLineVisible: false,
-			priceScaleId: '1',
+			priceScaleId: '2',
 			color: 'rgb(126, 87, 194)',
 			lineWidth: 2
 		});
@@ -124,7 +124,7 @@
 		const lineMacdHist = chart.addHistogramSeries({
 			lastValueVisible: false,
 			priceLineVisible: false,
-			priceScaleId: '2'
+			priceScaleId: '3'
 		});
 		lineMacdHist.priceScale().applyOptions({
 			scaleMargins: {
@@ -139,7 +139,7 @@
 			priceLineVisible: false,
 			lineWidth: 1,
 			color: 'yellow',
-			priceScaleId: '2'
+			priceScaleId: '3'
 		});
 		lineMacdDiff.priceScale().applyOptions({
 			scaleMargins: {
@@ -155,7 +155,7 @@
 			lineStyle: LineStyle.Dashed,
 			color: 'white',
 			lineWidth: 1,
-			priceScaleId: '2'
+			priceScaleId: '3'
 		});
 		lineMacdDea.priceScale().applyOptions({
 			scaleMargins: {
@@ -203,7 +203,7 @@
 		let diff = (Math.round(points.diff * 100) / 100).toFixed(2);
 		let dea = (Math.round(points.dea * 100) / 100).toFixed(2);
 		legendElement.innerHTML = `
-<div class="flex gap-2">
+<div class="flex gap-2 text-xs sm:text-lg">
   <span class="text-red-400">RSI: ${rsi}</span>
   <span class="text-blue-400">J: ${j}</span>
   <span class="text-blue-400">DIF: ${diff}</span>
