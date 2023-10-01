@@ -15,8 +15,8 @@
 		loading = true;
 
 		return async ({ update }) => {
-			await update();
 			loading = false;
+			await update();
 		};
 	};
 </script>
@@ -43,11 +43,10 @@
 					<Input id="password" type="password" name="password" required />
 				</div>
 
-				{#if !loading && form?.invalid}
+				{#if form?.invalid}
 					<p class="error">Username and password is required.</p>
 				{/if}
-
-				{#if !loading && form?.credentials}
+				{#if form?.credentials}
 					<p class="error">You have entered the wrong credentials.</p>
 				{/if}
 			</Card.Content>

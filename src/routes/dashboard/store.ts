@@ -10,8 +10,7 @@ export const sModalData = writable({
 const DemoTrackData = {
 	code: '1.600004',
 	name: 'cloud',
-	days: 11,
-	change: -0.03987
+	started: '2012-02-02'
 };
 
 export const sTrackData = writable<(typeof DemoTrackData)[]>([]);

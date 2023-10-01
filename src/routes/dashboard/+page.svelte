@@ -26,50 +26,12 @@
 	let actionResult = '';
 
 	const DemoTrackResult = {
+		id: '123',
 		code: '1.603589',
 		name: '口子窖',
-		started: '2023-08-28 00:00:00.000Z',
-		Records: [
-			{
-				code: '1.603589',
-				date: '2023-08-28 00:00:00.000Z',
-				open: 1,
-				high: 1,
-				low: 1,
-				close: 1
-			}
-		]
+		started: '2023-08-28 00:00:00.000Z'
 	};
 	type TTrackResult = typeof DemoTrackResult;
-
-	function processTrackAPIResult(data: TTrackResult[]) {
-		const result = [];
-		data.forEach((x) => {
-			if (!x.Records.length) {
-				result.push({
-					code: x.code,
-					name: x.name,
-					days: 0,
-					change: 0
-				});
-				return;
-			}
-
-			const startDate = new Date(x.Records[0].date);
-			const endDate = new Date(x.Records[x.Records.length - 1].date);
-			const diffDays = diffDay(startDate, endDate);
-			const startClose = x.Records[0].close;
-			const endClose = x.Records[x.Records.length - 1].close;
-			const change = (endClose - startClose) / startClose;
-			result.push({
-				code: x.code,
-				name: x.name,
-				days: diffDays,
-				change
-			});
-		});
-		return result;
-	}
 
 	onMount(async () => {
 		console.log('OnMount: processing server sent promise.');
@@ -80,10 +42,9 @@
 			return;
 		}
 
-		const result = await data.records?.track;
-		const trackData = processTrackAPIResult(result);
+		const result: TTrackResult[] = await data.records?.track;
 
-		for (const d of trackData) {
+		for (const d of result) {
 			$sTrackData = [...$sTrackData, d];
 		}
 		dataReady = true;
