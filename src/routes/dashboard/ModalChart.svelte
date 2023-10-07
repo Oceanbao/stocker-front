@@ -32,7 +32,7 @@
 
 		let dataStored = dailyCache.get($sModalData.code);
 		if (!dataStored) {
-			dataStored = await fetchDaily($sModalData.code);
+			dataStored = await fetchDaily($sModalData.code, $sModalData.etf);
 			if (!dataStored) {
 				console.log('ERROR: failed to fetch `daily` data');
 				loadingRequest = false;
@@ -57,8 +57,9 @@
 		loadingRequest = false;
 	}
 
-	async function fetchDaily(code: string) {
-		const resp = await fetch(`/api/daily?code=${code}`, {
+	async function fetchDaily(code: string, etf: boolean) {
+		const baseUrl = etf ? '/api/daily-etf' : '/api/daily';
+		const resp = await fetch(`${baseUrl}?code=${code}`, {
 			method: 'GET'
 		});
 		try {

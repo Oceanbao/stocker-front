@@ -13,6 +13,7 @@
 	import Search from './Search.svelte';
 	import UserNav from './UserNav.svelte';
 	import Rsi from './Rsi.svelte';
+	import Etf from './Etf.svelte';
 	import ModalChart from './ModalChart.svelte';
 	import { sTrackData, sModalData } from './store';
 	import SkeletonA from '$lib/components/SkeletonA.svelte';
@@ -55,6 +56,7 @@
 		$sModalData.name = name;
 		$sModalData.open = true;
 		$sModalData.trackable = false;
+		$sModalData.etf = false;
 	}
 
 	const submitUntrackAction: SubmitFunction = (event) => {
@@ -114,7 +116,7 @@
 				<Tabs.List class="overflow-x-auto w-full justify-start">
 					<Tabs.Trigger value="tracking">Tracking</Tabs.Trigger>
 					<Tabs.Trigger value="rsi">RSI</Tabs.Trigger>
-					<Tabs.Trigger value="reports" disabled>Reports</Tabs.Trigger>
+					<Tabs.Trigger value="etf">ETF</Tabs.Trigger>
 					<Tabs.Trigger value="notifications" disabled>Notifications</Tabs.Trigger>
 				</Tabs.List>
 				<Tabs.Content value="tracking" class="space-y-4">
@@ -198,6 +200,7 @@
 					<!-- 	</Card.Root> -->
 					<!-- </div> -->
 				</Tabs.Content>
+
 				<Tabs.Content value="rsi" class="space-y-4">
 					{#await data.records?.alert}
 						<div class="grid">
@@ -205,6 +208,16 @@
 						</div>
 					{:then value}
 						<Rsi records={value} />
+					{/await}
+				</Tabs.Content>
+
+				<Tabs.Content value="etf" class="space-y-4">
+					{#await data.records?.alertETF}
+						<div class="grid">
+							<SkeletonA num={3} />
+						</div>
+					{:then value}
+						<Etf records={value} />
 					{/await}
 				</Tabs.Content>
 			</Tabs.Root>

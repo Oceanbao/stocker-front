@@ -4,7 +4,8 @@ export const sModalData = writable({
 	open: false,
 	code: '',
 	name: '',
-	trackable: false
+	trackable: false,
+	etf: false
 });
 
 const DemoTrackData = {
@@ -14,3 +15,5 @@ const DemoTrackData = {
 };
 
 export const sTrackData = writable<(typeof DemoTrackData)[]>([]);
+
+export const sTrackETFData = writable<(typeof DemoTrackData)[]>([]);

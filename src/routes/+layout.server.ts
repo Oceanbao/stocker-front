@@ -13,6 +13,16 @@ export const load: LayoutServerLoad = async (event) => {
 		}
 	};
 
+	const getAlertRecordsETF = async () => {
+		const resp = await event.fetch('/api/alert-etf');
+		const body = await resp.json();
+		if (body.status === 'ok') {
+			return body.data;
+		} else {
+			return null;
+		}
+	};
+
 	const getTrackRecords = async () => {
 		try {
 			const body = await event.locals.pb?.send('/track', {});
@@ -33,6 +43,7 @@ export const load: LayoutServerLoad = async (event) => {
 			isLoggedIn: true,
 			records: {
 				alert: getAlertRecords(),
+				alertETF: getAlertRecordsETF(),
 				track: getTrackRecords()
 			}
 		};
