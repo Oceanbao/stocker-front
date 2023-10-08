@@ -10,10 +10,12 @@
 		computeKDJ,
 		computeMACD,
 		computeRSI,
+		computeEMA,
 		type TDaily,
 		type TKdj,
 		type TMacd,
-		type TRsi
+		type TRsi,
+		type TEma
 	} from './chartUtils';
 
 	let dailyCache: Map<string, Record<string, string>[]> = new Map();
@@ -21,6 +23,8 @@
 	let rsiData: TRsi[];
 	let kdjData: TKdj[];
 	let macdData: TMacd[];
+	let ema5Data: TEma[];
+	let ema50Data: TEma[];
 	let loadingRequest = true;
 	let loadingTrackAction = false;
 	let actionResult: string;
@@ -54,6 +58,8 @@
 		);
 		kdjData = computeKDJ(candleData);
 		macdData = computeMACD(candleData);
+		ema5Data = computeEMA(candleData, 5);
+		ema50Data = computeEMA(candleData, 50);
 		loadingRequest = false;
 	}
 
@@ -167,6 +173,8 @@
 						time: x.time,
 						value: x.dea
 					}))}
+					lineDataEma5={ema5Data}
+					lineDataEma50={ema50Data}
 				/>
 			{/if}
 		</div>

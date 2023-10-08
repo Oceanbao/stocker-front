@@ -20,6 +20,8 @@
 	export let lineDataMacdDiff: LineData[];
 	export let lineDataMacdDea: LineData[];
 	export let lineDataMacdHist: HistogramData[];
+	export let lineDataEma5: LineData[];
+	export let lineDataEma50: LineData[];
 
 	let chartElement: HTMLDivElement;
 	let legendElement: HTMLDivElement;
@@ -60,6 +62,36 @@
 			}
 		});
 		candleSeries.setData(candleData);
+
+		const lineEma5Series = chart.addLineSeries({
+			priceScaleId: '0',
+			lastValueVisible: false,
+			priceLineVisible: false,
+			color: 'lightblue',
+			lineWidth: 1
+		});
+		candleSeries.priceScale().applyOptions({
+			scaleMargins: {
+				top: 0,
+				bottom: 0.7
+			}
+		});
+		lineEma5Series.setData(lineDataEma5);
+
+		const lineEma50Series = chart.addLineSeries({
+			priceScaleId: '0',
+			lastValueVisible: false,
+			priceLineVisible: false,
+			color: 'white',
+			lineWidth: 1
+		});
+		candleSeries.priceScale().applyOptions({
+			scaleMargins: {
+				top: 0,
+				bottom: 0.7
+			}
+		});
+		lineEma50Series.setData(lineDataEma50);
 
 		const lineRsi = chart.addLineSeries({
 			lastValueVisible: false,

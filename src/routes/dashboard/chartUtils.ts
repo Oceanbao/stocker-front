@@ -166,3 +166,29 @@ export function computeMACD(data: TDaily[]): TMacd[] {
 
 	return output;
 }
+
+function sum(x: number[]): number {
+	return x.reduce((prev, curr) => (prev += curr));
+}
+
+export type TEma = {
+	time: string;
+	value: number;
+};
+
+export function computeEMA(data: TDaily[], period: number): TEma[] {
+	const ema: number[] = [];
+	const closing = data.map((x) => x.close);
+
+	for (let i = 0; i < data.length; i++) {
+		if (i < period) {
+			ema.push(sum(closing.slice(0, i + 1)) / (i + 1));
+		} else {
+			ema.push(closing[i] * (2 / (period + 1)) + ema[i - 1] * ((period - 1) / (period + 1)));
+		}
+	}
+	return data.map((x, i) => ({
+		time: x.time,
+		value: ema[i]
+	}));
+}
