@@ -17,6 +17,7 @@
 		type TRsi,
 		type TEma
 	} from './chartUtils';
+	import { cn } from '$lib/utils';
 
 	let dailyCache: Map<string, Record<string, string>[]> = new Map();
 	let candleData: TDaily[];
@@ -121,7 +122,12 @@
 
 <Dialog.Root open={$sModalData.open} onOpenChange={() => ($sModalData.open = false)}>
 	<Dialog.Content
-		class="h-[70vh] w-[95vw] lg:h-[80%] lg:max-w-[80%] auto-rows-auto overflow-y-auto"
+		class={cn(
+			'border border-blue-400 rounded-lg h-[70vh] w-[95vw] lg:h-[80%] lg:max-w-[80%] auto-rows-auto overflow-y-auto',
+			'[&_.lucide-x]:text-blue-400',
+			'[&_.lucide-x]:w-10',
+			'[&_.lucide-x]:h-10'
+		)}
 	>
 		<Dialog.Header>
 			<Dialog.Title class="text-sm sm:text-xl">{$sModalData.code} {$sModalData.name}</Dialog.Title>

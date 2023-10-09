@@ -12,6 +12,8 @@ const DemoTrackData = {
 	code: '1.600004',
 	name: 'cloud',
 	started: '2012-02-02'
+	// change: 0.123,
+	// days: 3
 };
 
 export const sTrackData = writable<(typeof DemoTrackData)[]>([]);
