@@ -22,11 +22,7 @@
 			{#if data.user}
 				<div class="flex flex-col">
 					<p>You're logged in as: {data.user.name}</p>
-					<Button class="text-center my-4"
-						><a href="/dashboard" class="text-sm font-medium transition-colors hover:text-primary">
-							Dashboard
-						</a></Button
-					>
+					<Button href="/dashboard" class="my-4">Dashboard</Button>
 				</div>
 			{:else}
 				<a href="/login">

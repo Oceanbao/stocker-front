@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { SubmitFunction } from '@sveltejs/kit';
-	import { enhance } from '$app/forms';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
@@ -11,19 +9,14 @@
 
 	let loading = false;
 
-	const submitFunction: SubmitFunction = () => {
+	function handlerSubmit() {
 		loading = true;
-
-		return async ({ update }) => {
-			loading = false;
-			await update();
-		};
-	};
+	}
 </script>
 
 <main class="h-full grid place-items-center">
 	<Card.Root class="w-80">
-		<form method="POST" action="?/login" use:enhance={submitFunction}>
+		<form method="POST" action="?/login">
 			<Card.Header class="space-y-1">
 				<Card.Title class="text-2xl">Login</Card.Title>
 				<Card.Description>Enter your credentials below to login your account.</Card.Description>
@@ -51,7 +44,7 @@
 				{/if}
 			</Card.Content>
 			<Card.Footer>
-				<Button type="submit" class="w-full">
+				<Button type="submit" class="w-full" on:click={handlerSubmit}>
 					{#if loading}
 						<Loader2 class="animate-spin" />
 					{:else}
